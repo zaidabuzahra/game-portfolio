@@ -1,15 +1,59 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-cozy-red: #a35b5b;
+  --color-cozy-brown: #3d3532;
+  --color-cozy-gray: #161616;
+  --color-cozy-paper: #e5e0d8;
+  --color-cozy-dark: #0a0a0a;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+@layer base {
+  html { scroll-behavior: smooth; background: var(--color-cozy-gray); color: var(--color-cozy-paper); }
+  /* Custom Scrollbar for a more professional feel */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--color-cozy-gray); }
+  ::-webkit-scrollbar-thumb { background: var(--color-cozy-brown); border-radius: 10px; }
+  
+  body {
+    margin: 0;
+    /* Subtle paper texture overlay */
+    background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+  }
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+section[id] {
+  scroll-margin-top: 120px;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .outline-text {
+    -webkit-text-stroke: 1px rgba(229, 224, 216, 0.1);
+    color: transparent;
+    transition: all 0.5s ease;
+  }
+  
+  .outline-text:hover {
+    -webkit-text-stroke: 1px var(--color-cozy-red);
+  }
+
+  /* Cozy blur effect for background glows */
+  .bg-glow {
+    background: radial-gradient(circle, rgba(163, 91, 91, 0.15) 0%, rgba(0,0,0,0) 70%);
+  }
+}
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
