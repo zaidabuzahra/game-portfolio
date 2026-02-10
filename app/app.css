@@ -6,25 +6,51 @@
   --color-cozy-gray: #161616;
   --color-cozy-paper: #e5e0d8;
   --color-cozy-dark: #0a0a0a;
+
+  /* Font Definitions */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Inter", sans-serif;
+  --font-ariel: "Arial", sans-serif;
 }
 
 @layer base {
-  html { scroll-behavior: smooth; background: var(--color-cozy-gray); color: var(--color-cozy-paper); }
-  /* Custom Scrollbar for a more professional feel */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: var(--color-cozy-gray); }
-  ::-webkit-scrollbar-thumb { background: var(--color-cozy-brown); border-radius: 10px; }
-  
+  html { 
+    scroll-behavior: smooth; 
+    background: var(--color-cozy-gray); 
+    color: var(--color-cozy-paper); 
+    /* Set the technical font as default */
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     margin: 0;
-    /* Subtle paper texture overlay */
     background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
   }
 
-  a {
-    text-decoration: none;
-    color: inherit;
+  /* Improve readability for descriptions and paragraphs */
+  p {
+    line-height: 1.65; /* Increased spacing between lines */
+    letter-spacing: 0.01em;
+    font-weight: 300; /* Lighter weights are easier to read on dark backgrounds */
   }
+
+  /* Industrial headers */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--color-cozy-gray); }
+  ::-webkit-scrollbar-thumb { background: var(--color-cozy-brown); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-cozy-red); }
+
+  a { text-decoration: none; color: inherit; }
 }
 
 section[id] {
@@ -32,7 +58,15 @@ section[id] {
 }
 
 @layer utilities {
-  .no-scrollbar::-webkit-scrollbar { display: none; }
+  /* Combined Utilities */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar { 
+    display: none; 
+  }
+
   .outline-text {
     -webkit-text-stroke: 1px rgba(229, 224, 216, 0.1);
     color: transparent;
@@ -43,17 +77,7 @@ section[id] {
     -webkit-text-stroke: 1px var(--color-cozy-red);
   }
 
-  /* Cozy blur effect for background glows */
   .bg-glow {
     background: radial-gradient(circle, rgba(163, 91, 91, 0.15) 0%, rgba(0,0,0,0) 70%);
-  }
-}
-@layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
   }
 }

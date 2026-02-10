@@ -76,7 +76,7 @@ export const projects: Project[] = [
       },
       { 
         step: "Iterative Design Optimization", 
-        detail: "Systematically analyzed player feedback to execute design iterations, significantly improving the game's UX and difficulty curve." 
+        detail: "Systematically analyzed player feedback to execute design iterations, significantly improving the game's experience and difficulty curve." 
       },
       { 
         step: "Market & Community Strategy", 
@@ -152,7 +152,7 @@ export const projects: Project[] = [
     storeUrl: "https://oneaction.itch.io/where-vines-whisper-lies",
     art: "/images/WhereVinesWhisperLiesArt.png",
     backdrop: "/game footage/WhereVinesWhisperLiesMainMenu.gif",
-    images: ["/art/vines-1.jpg", "/art/vines-2.jpg", "/art/vines-3.jpg"],
+    images: ["/images/WVWL-1.png", "/images/WVWL-2.png", "/images/WVWL-3.png", "/images/WVWL-4.png", "/images/WVWL-5.png"],
 
     stats: [
       { label: "Engine", value: "Unity / C#" },
@@ -172,10 +172,10 @@ export const projects: Project[] = [
     ],
 
     process: [
-      { step: "", detail: "Led a team of 4 in designing and developing the game over a full academic year." },
-      { step: "", detail: "Designed and implemented core gameplay mechanics and puzzles." },
-      { step: "", detail: "Managed all aspects of development including design, programming, and art direction." },
-      { step: "", detail: "Analyzed player feedback and game metrics to refine gameplay and improve storytelling and environment design." },
+      { step: "", detail: "Led a team of 4 in designing and developing the game over a full academic year, managing tasks, timelines, team alignment, and documentation." },
+      { step: "", detail: "Designed and implemented gun switching mechanics by managing animations and logic states to switch gun functionality and interaction." },
+      { step: "", detail: "Implemented an interactive dialogue system with branching storylines and multiple dialogue options by creating a custom dialogue manager and UI system." },
+      { step: "", detail: "Analyzed player feedback and game metrics to refine gameplay and improve storytelling through environment design and dialogue." },
     ],
     responsibilities: [
       "Led a team of 4 in designing core gameplay mechanics and puzzles.",
@@ -187,18 +187,59 @@ export const projects: Project[] = [
     category: "published",
     title: "Party Roulette",
     role: "Team Leader & Programmer",
-    description: "2D puzzle-platformer featuring a movement-based gravity gun that alters object orientation.",
-    media: "/game footage/Zero-G_Trailer.mp4",
+    description: "Party Roulette is a turn-based party game. Developed in a game jam, you and your friends play Russian roulette with a twist. Instead of having one chance to die, players choose cards each round to alter the chances.",
+    media: "/game footage/PartyRouletteVideo.mp4",
     type: "video",
-    thumbnail: "/thumbnails/zero-g-thumb.png",
+    thumbnail: "/images/PartyRouletteArt.png",
     storeType: "itch",
     storeUrl: "https://oneaction.itch.io/partyroulitte",
-    art: "/art/zero-g-art.png",
-    backdrop: "/images/LittleWoodyArt.png",
-    images: ["/art/sketch1.png", "/art/sketch4.png"],
+    art: "/images/PartyRouletteArt.png",
+    backdrop: "/images/PartyRouletteArt.png",
+    images: ["/images/PartyRoulette-1.png", "/images/PartyRoulette-2.png", "/images/PartyRoulette-3.png", "/images/PartyRoulette-4.png"],
     process: [
-      { step: "Mechanic Design", detail: "Programmed a complex gravity gun mechanic that changes physics based on movement." },
-      { step: "Structure", detail: "Managed code structure and team leadership for a high-performing academic project." }
+      { step: "", detail: "Led a team of 4 in designing and developing the game during a 48-hour game jam with the theme 'One Chance'." },
+      { step: "", detail: "Implemented and programmed the core game mechanics and developed a custom structure for creating new cards and abiliies." },
+      { step: "", detail: "Used DOTween library for smooth animations and transitions for card interactions and camera transitions." }
+    ],
+    stats: [
+      { label: "Engine", value: "Unity / C#" },
+      { label: "Team Size", value: "Solo Project" },
+      { label: "Status", value: "Self-Published" },
+      { label: "Platform", value: "Mobile / iOS & Android" }
+    ],
+    longDescription: `Aqua Rush is a 2D auto-runner mobile game where players control a water droplet navigating through an endless, 
+    procedurally generated environment. The core gameplay loop focuses on quick reflexes and strategic use of power-ups to survive as 
+    long as possible while collecting points. \n\nAs the sole developer, I was responsible for every aspect of the game's creation, 
+    from initial concept and design to programming, art creation, and deployment. This project allowed me to explore the full lifecycle 
+    of game development and hone my skills in both technical and creative domains.`,
+    progressGallery: [
+      { url: "/images/AquaRush_Sketch1.jpg", caption: "Initial Concept Sketch: Visualizing the core gameplay loop and art style." },
+      { url: "/images/AquaRush_Prototype.jpg", caption: "Early Prototype: Implementing basic mechanics and procedural generation." },
+      { url: "/images/AquaRush_Final.jpg", caption: "Final Version: Polished art and refined gameplay for release." }
+    ],
+    responsibilities: [
+      "Led a team of 5 in designing and implementing core gameplay mechanics.",
+      "Programmed the gravity gun mechanic and ensured smooth physics interactions."
+    ]
+  },
+  {
+    id: "Demo",
+    category: "demo",
+    title: "Cube Game",
+    role: "Team Leader & Programmer",
+    description: "Party Roulette is a turn-based party game. Developed in a game jam, you and your friends play Russian roulette with a twist. Instead of having one chance to die, players choose cards each round to alter the chances.",
+    media: "/game footage/CubeGameVideo.mp4",
+    type: "video",
+    thumbnail: "/images/CubeGameArt.png",
+    storeType: "itch",
+    storeUrl: "https://oneaction.itch.io/cubegame",
+    art: "/images/CubeGameArt.png",
+    backdrop: "/images/CubeGameArt.png",
+    images: ["/images/CubeGame-1.png", "/images/CubeGame-2.png", "/images/CubeGame-3.png", "/images/CubeGame-4.png"],
+    process: [
+      { step: "", detail: "Led a team of 4 in designing and developing the game during a 48-hour game jam with the theme 'One Chance'." },
+      { step: "", detail: "Implemented and programmed the core game mechanics and developed a custom structure for creating new cards and abiliies." },
+      { step: "", detail: "Used DOTween library for smooth animations and transitions for card interactions and camera transitions." }
     ],
     stats: [
       { label: "Engine", value: "Unity / C#" },
