@@ -98,7 +98,7 @@ export default function Header() {
 
       {/* 3. DOWNLOAD CV (Right) */}
       <a 
-        href="/pdfs/ZaidAbuzahraCV.pdf" 
+        href="/pdfs/Zaid Abuzahra CV- Game Designer.pdf" 
         download 
         className="bg-cozy-gray text-cozy-paper px-4 py-1 rounded-sm text-[10px] font-black uppercase tracking-widest hover:bg-cozy-red transition-all flex-shrink-0"
       >

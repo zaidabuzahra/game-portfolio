@@ -114,7 +114,7 @@ function CategorySection({ title, id, list, layout }: { title: string, id: strin
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols- gap-8">
             {list.map((project) => (
               <DemoCard key={project.id} project={project} />
             ))}
@@ -130,19 +130,18 @@ function DemoCard({ project }: { project: Project }) {
   return (
     <div className="bg-cozy-dark border border-cozy-brown flex flex-col h-full group hover:border-cozy-red transition-colors duration-300">
       {/* 1. Image with Overlay Title */}
-      <div className="relative aspect-square bg-black overflow-hidden border-b border-cozy-brown">
-        <img src={project.thumbnail} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={project.title} />
-        <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-md p-4 border-t border-white/5">
-          <h3 className="text-2xl font-black uppercase tracking-tight text-center">{project.title}</h3>
-        </div>
+      <div className="aspect-video bg-black border-b border-cozy-brown relative">
+        {getVideoPlayer(project.media || "", false, project.thumbnail)}
       </div>
-
+      <div className="relative bg-black/80 backdrop-blur-md p-4 border-t border-white/5">
+          <h3 className="text-2xl font-black uppercase tracking-tight text-center">{project.title}</h3>
+      </div>
       {/* 2. Tags & Description */}
       <div className="p-6 flex flex-col flex-grow">
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap ">
         </div>
 
-        <p className="text-sm text-cozy-paper/60 font-light mb-6 leading-relaxed">
+        <p className="text-s text-cozy-paper/60 font-light mb-3 leading-relaxed">
           {project.description}
         </p>
 
@@ -153,7 +152,7 @@ function DemoCard({ project }: { project: Project }) {
             {project.process.slice(0, 3).map((p, i) => (
               <li key={i} className="flex gap-3 items-start">
                 <Check size={14} className="text-cozy-red flex-shrink-0 mt-0.5" />
-                <span className="text-xs font-bold text-cozy-paper/90 leading-tight">{p.step}</span>
+                <span className="text-s text-cozy-paper/90 leading-tight">{p.detail}</span>
               </li>
             ))}
           </ul>
@@ -253,7 +252,7 @@ function ContactSection() {
     { label: "Email", value: "zaidabuzahra2@gmail.com", url: "mailto:zaidabuzahra2@gmail.com", icon: Mail },
     { label: "LinkedIn", value: "zaid-abuzahra", url: "https://linkedin.com/in/zaid-abuzahra-7532141b2", icon: Linkedin },
     { label: "Instagram", value: "@zaid_abuzahra5", url: "https://www.instagram.com/zaid_abuzahra5/", icon: Instagram },
-    { label: "WhatsApp/Mobile", value: "+90 5316178831", url: "tel:+905551234567", icon: Phone },
+    { label: "WhatsApp/Mobile", value: "+90 5316178831", url: "tel:+905316178831", icon: Phone },
   ];
 
   return (

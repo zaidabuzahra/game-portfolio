@@ -1,3 +1,6 @@
+import DialogueManager from "./Code/DialogueManager.cs?raw";
+import Dialogue from "./Code/Dialogue.cs?raw";
+
 export interface Project {
   id: string;
   category: 'professional' | 'published' | 'demo';
@@ -22,7 +25,7 @@ export interface Project {
   longDescription: string;
   progressGallery: { url: string; caption: string }[];
   process: { step: string; detail: string }[];
-  responsibilities: string[];
+  responsibilities?: string[];
 }
 
 export const projects: Project[] = [
@@ -39,7 +42,7 @@ export const projects: Project[] = [
     storeType: "steam",
     storeUrl: "https://store.steampowered.com/app/123456/Little_Woody/",
     backdrop: "/images/LittleWoodyArt.png",
-    images: ["/images/LittleWoody-1.jpg", "/images/LittleWoody-2.jpg", "/images/LittleWoody-3.jpg", "/images/LittleWoody-4.jpg", "/images/LittleWoody-5.png", "/images/LittleWoody-6.png", "/images/LittleWoody-7.jpg", "/images/LittleWoody-8.jpg"],
+    images: ["/images/LittleWoody-1.jpg", "/images/LittleWoody-2.jpg", "/images/LittleWoody-3.jpg", "/images/LittleWoody-4.jpg", "/images/LittleWoody-5.png", "/images/LittleWoody-6.png", "/images/LittleWoody-7.jpg"],
     documents: [ 
       { 
         title: "Little Woody GDD (Restricted by NDA)",
@@ -174,7 +177,7 @@ export const projects: Project[] = [
       { label: "Engine", value: "Unity / C#" },
       { label: "Team Size", value: "Solo Project" },
       { label: "Status", value: "Self-Published" },
-      { label: "Platform", value: "Mobile / iOS & Android" }
+      { label: "Platform", value: "Mobile / Android" }
     ],
     longDescription: `!Aqua Rush is a 2D auto-runner mobile game where players control a water droplet navigating through an endless, 
     procedurally generated environment. The core gameplay loop focuses on quick reflexes and strategic use of power-ups to survive as 
@@ -202,10 +205,6 @@ export const projects: Project[] = [
       { step: "", detail: "Integrated a survival feature for the player to manage risk and reward." },
       { step: "", detail: "Designed and created all game assets including characters and environments." },
       { step: "", detail: "Managed the entire publishing process on the Google Play Store and implemented advertisement integration." },
-    ],
-    responsibilities: [
-      "Solely developed the game from concept to deployment on the App Store and Google Play.",
-      "Designed all game assets including characters, environments, and UI elements."
     ]
   },
   {
@@ -222,6 +221,13 @@ export const projects: Project[] = [
     art: "/images/WhereVinesWhisperLiesArt.png",
     backdrop: "/game footage/WhereVinesWhisperLiesMainMenu.gif",
     images: ["/images/WVWL-1.png", "/images/WVWL-2.png", "/images/WVWL-3.png", "/images/WVWL-4.png", "/images/WVWL-5.png"],
+    documents: [
+      { 
+        title: "Where Vines Whisper Lies GDD",
+        url: "/pdfs/WhereVinesWhisperLies GDD.pdf",
+        category: "Design",
+      }
+    ],
 
     stats: [
       { label: "Engine", value: "Unity / C#" },
@@ -229,9 +235,47 @@ export const projects: Project[] = [
       { label: "Status", value: "Self-Published" },
       { label: "Platform", value: "PC / Itch.io" }
     ],
-    longDescription: `!`,
+    longDescription: 
+    `!Where Vines Whisper Lies is a 3D adventure game about a loop of two delusional scientists trying to complete 
+    their world-changing research that is doomed to fail. The game is designed to be an atmospheric and engaging experience, with a focus on 
+     exploration and storytelling. The game was developed as a year-long project for my Game Design graduation project, where we had to 
+     design and develop a game from scratch in a team of 4.
+    \n\n!As the team leader, developer, game designer, and environment designer, I was responsible for overseeing the development process, 
+    ensuring that the team stayed on track and that our vision for the game was realized. To manage that, I created and maintained a 
+    detailed GDD that outlined the game's mechanics, story direction, and art direction, which served as a central reference for the team 
+    throughout development. You can find the GDD in the "Documentation" section below.
+    \n\n!I took on full programming responsibilities, implementing core gameplay mechanics and controllers. 
+    One of the challenges I faced was ensuring that the dialogue system was flexible enough to accommodate the branching storylines 
+    and multiple dialogue options, while also being easy for our writers to use. To address this, I created a custom dialogue manager that 
+    allowed writers to create and manage dialogue trees using ScriptableObjects, which provided a user-friendly interface for creating 
+    complex dialogues without needing to modify code. This system also allowed for easy integration of voice acting and animations, 
+    which enhanced the overall player experience.
+    \n\n?Dialogue Manager
+    \n\n?Dialogue ScriptableObject 
+    \n\n!
+    \n\nI was also responsible for the environment design, I worked closely with our art team to create immersive and atmospheric 
+    environments that supported the narrative and gameplay. I utilized Unity's lighting and post-processing tools to create a moody 
+    and atmospheric aesthetic that complemented the game's themes of delusion and obsession.
+    \n\n
+     
+     \n\n!I analyzed player feedback and game metrics to refine the gameplay and improve the storytelling through environment 
+     design and dialogue. Originally, we had a lot of feedback about players struggling to understand or care about the game's story and narrative,
+     which led to frustration and disengagement. To address this, I made a number of adjustments to the game's design and narrative delivery:
+     \n\n!1. I reworked the game's opening sequence to provide a clearer introduction to the characters and their motivations, which helped players connect with the story from the beginning.
+     \n\n!2. I helped rewrite the dialogue to be more concise and impactful, focusing on key narrative beats and character development to keep players engaged and invested in the story.
+     \n\n!3. I redesigned the environments to better support the narrative and provide more visual storytelling cues, which helped players understand the story through exploration and environmental details.
+     \n\n!4. I redesigned the puzzles and mechanics to be more tied to the narrative and character development, which made the gameplay feel more meaningful and connected to the story.
+     \n\n!These adjustments significantly improved player engagement and understanding of the game's narrative, leading to a much more enjoyable and immersive experience overall.
+     \n\n!Where Vines Whisper Lies was my opporunity to design a narrative-driven game from the ground up. As someone who takes Uncharted
+     as their favorite game of all time, I wanted to create a game that had a strong narrative focus and that allowed players to engage 
+     with the story in a meaningful way. Working on this project taught me a lot about the challenges of creating a narrative-driven game,
+      and how to design mechanics and environments that support and enhance the storytelling, while listing to player feedback and 
+      iterating on the design to create a more engaging and immersive experience.
+    
+    `,
     progressGallery: [
-      { url: "/images/AquaRush_Sketch1.jpg", caption: "Initial Concept Sketch: Visualizing the core gameplay loop and art style." },
+      { url: "/WVWLCaseStudy/BeforeWVWL.jpeg", caption: "Early level blockout" },
+      { url: "/WVWLCaseStudy/AfterWVWL.jpeg", caption: "Final level design with art and lighting" },
     ],
 
     process: [
@@ -241,8 +285,8 @@ export const projects: Project[] = [
       { step: "", detail: "Analyzed player feedback and game metrics to refine gameplay and improve storytelling through environment design and dialogue." },
     ],
     responsibilities: [
-      "Led a team of 4 in designing core gameplay mechanics and puzzles.",
-      "Created all 3D art assets including characters, environments, and props."
+      DialogueManager,
+      Dialogue
     ]
   },
   {
@@ -295,39 +339,54 @@ export const projects: Project[] = [
     category: "demo",
     title: "4 Squares",
     role: "Solo Developer",
-    description: "",
-    media: "/game footage/CubeGameVideo.mp4",
+    description: `A prototype for a 2D platformer game where players can switch between four different colors, each with unique abilities
+    and interactions with the environment. The player can change colors at anytime, creating a dynamic control and feel.`,
+    media: "https://youtu.be/fRgd-K5in9g?si=7rlJlkup-RtQ0fM-",
     type: "video",
-    thumbnail: "/images/CubeGameArt.png",
-    storeType: "itch",
-    storeUrl: "https://oneaction.itch.io/cubegame",
-    art: "/images/CubeGameArt.png",
-    backdrop: "/images/CubeGameArt.png",
-    images: ["/images/CubeGame-1.png", "/images/CubeGame-2.png", "/images/CubeGame-3.png", "/images/CubeGame-4.png"],
+    thumbnail: "/images/WhereVinesWhisperLiesArt.png",
+    art: "/images/WhereVinesWhisperLiesArt.png",
+    backdrop: "/images/WhereVinesWhisperLiesArt.png",
+    images: [],
     process: [
-      { step: "", detail: "Led a team of 4 in designing and developing the game during a 48-hour game jam with the theme 'One Chance'." },
-      { step: "", detail: "Implemented and programmed the core game mechanics and developed a custom structure for creating new cards and abiliies." },
-      { step: "", detail: "Used DOTween library for smooth animations and transitions for card interactions and camera transitions." }
+      { step: "", detail: `Designed and implemented platforming mechanics to create a dynamic movement controller based on speed and momentum.` },
+      { step: "", detail: "Implemented an art style that delivers a cohesive game theme with a relaxing tone." },
+      { step: "", detail: "Managed level props and level design that changes with the form chosen by the player." }
     ],
     stats: [
       { label: "Engine", value: "Unity / C#" },
       { label: "Team Size", value: "Solo Project" },
       { label: "Status", value: "Self-Published" },
-      { label: "Platform", value: "Mobile / iOS & Android" }
+      { label: "Platform", value: "PC / Windows" }
     ],
-    longDescription: `Aqua Rush is a 2D auto-runner mobile game where players control a water droplet navigating through an endless, 
-    procedurally generated environment. The core gameplay loop focuses on quick reflexes and strategic use of power-ups to survive as 
-    long as possible while collecting points. \n\nAs the sole developer, I was responsible for every aspect of the game's creation, 
-    from initial concept and design to programming, art creation, and deployment. This project allowed me to explore the full lifecycle 
-    of game development and hone my skills in both technical and creative domains.`,
-    progressGallery: [
-      { url: "/images/AquaRush_Sketch1.jpg", caption: "Initial Concept Sketch: Visualizing the core gameplay loop and art style." },
-      { url: "/images/AquaRush_Prototype.jpg", caption: "Early Prototype: Implementing basic mechanics and procedural generation." },
-      { url: "/images/AquaRush_Final.jpg", caption: "Final Version: Polished art and refined gameplay for release." }
+    longDescription: ``,
+    progressGallery: []
+  },
+  {
+    id: "Demo",
+    category: "demo",
+    title: "RTS Prototype",
+    role: "Solo Developer",
+    description: `A prototype for a real-time strategy game where players control a group of units to gather resources, build structures,
+     and defeat enemies. The game features a resource management system where players must balance their economy while also managing 
+     their army.`,
+    media: "https://youtu.be/vjiGHNq4Msw?si=4ujGu36vw5ixEb-7",
+    type: "video",
+    thumbnail: "/images/WhereVinesWhisperLiesArt.png",
+    art: "/images/WhereVinesWhisperLiesArt.png",
+    backdrop: "/images/WhereVinesWhisperLiesArt.png",
+    images: [],
+    process: [
+      { step: "", detail: "Designed and implemented RTS mechanics and controls like building structures, employing troops, and mouse-based controls." },
+      { step: "", detail: "Implemented AI logic and pathfinding algorithms using Unity's NavMesh system." },
+      { step: "", detail: "Designed and implemented a skill tree system that allows players to upgrade troops." }
     ],
-    responsibilities: [
-      "Led a team of 5 in designing and implementing core gameplay mechanics.",
-      "Programmed the gravity gun mechanic and ensured smooth physics interactions."
-    ]
+    stats: [
+      { label: "Engine", value: "Unity / C#" },
+      { label: "Team Size", value: "Solo Project" },
+      { label: "Status", value: "Self-Published" },
+      { label: "Platform", value: "PC / Windows & macOS" }
+    ],
+    longDescription: ``,
+    progressGallery: []
   }
 ];

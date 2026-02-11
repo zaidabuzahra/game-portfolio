@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
 import { projects } from "../projects";
 import Header from "./header";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import vscDarkPlus from 'react-syntax-highlighter/dist/cjs/styles/prism/vsc-dark-plus';
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -10,7 +12,29 @@ export default function ProjectDetail() {
   const [isMounted, setIsMounted] = useState(false);
 
   let ie = 0;
+  let iee = 0;
+  const getVideoPlayer = (url: string, isAutoplay: boolean = false, poster?: string) => {
+  const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
 
+  if (isYouTube) {
+    const videoId = url.includes("v=") 
+      ? url.split("v=")[1]?.split("&")[0] 
+      : url.split("/").pop()?.split("?")[0];
+    
+    const params = isAutoplay 
+      ? `?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1` 
+      : `?rel=0&modestbranding=1`;
+    
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}${params}`}
+        className="w-full h-full border-none"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+      />
+    );
+  }}
+  
   useEffect(() => { setIsMounted(true); }, []);
 
   if (!project) return <div className="p-40 text-center font-sans">Project not found.</div>;
@@ -57,9 +81,9 @@ export default function ProjectDetail() {
         {/* 2. VISUAL SUMMARY (Video) */}
         <section className="mb-10">
           <div className="bg-black shadow-2xl rounded-sm overflow-hidden border border-white/5">
-            <video controls poster={project.thumbnail} className="w-full h-auto max-h-[75vh] object-contain">
-              <source src={project.media} type="video/mp4" />
-            </video>
+            <div className="bg-black border border-cozy-brown aspect-video flex items-center justify-center overflow-hidden relative" key={project.media}>
+              {getVideoPlayer(project.media, false, project.thumbnail)}
+            </div>
           </div>
         </section>
 
@@ -69,13 +93,21 @@ export default function ProjectDetail() {
             
             {/* Split the long description into paragraphs and intersperse images */}
             {project.longDescription.split('\n\n').map((paragraph, i) => (
-              <div key={i} className="flex flex-col gap-6">
-                <p className="md:text-base leading-relaxed text-cozy-paper/80 font-light">
-                  {paragraph.startsWith('!') ? paragraph.substring(1) : paragraph}
-                </p>
+              <div key={i} className="">
+                {paragraph.startsWith('?') && (
+                  <figure>
+                  <CodeSnippet title={paragraph.substring(1)} code={project.responsibilities?.[iee] || "No responsibilities defined"} />
+                  <div className="hidden">{iee++}</div>
+                  </figure>
+                )}
+                {!paragraph.startsWith('?') && (
+                  <p className="md:text-base leading-relaxed text-cozy-paper/80 font-light">
+                    {paragraph.startsWith('!') ? paragraph.substring(1) : paragraph}
+                  </p>
+                )}
                 
                 {/* One high-quality image from gallery per paragraph block */}
-                {!paragraph.startsWith('!') && project.progressGallery?.[ie] && (
+                {!paragraph.startsWith('!') && !paragraph.startsWith('?') && project.progressGallery?.[ie] && (
                   <figure className="py-5">
                     <div className="bg-cozy-dark border border-cozy-brown/30 shadow-sm">
                       <img 
@@ -140,6 +172,77 @@ export default function ProjectDetail() {
       <footer className="mt-40 py-20 border-t border-cozy-brown/10 text-center opacity-30 text-[10px] uppercase tracking-[0.4em]">
         {project.title} Case Study — {new Date().getFullYear()}
       </footer>
+    </div>
+  );
+}
+function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang?: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Debugging: If this doesn't show in your console when clicking, 
+  // then something is blocking the click entirely.
+  const toggleOpen = () => {
+    console.log("Toggle clicked. Old state:", isOpen);
+    setIsOpen(!isOpen);
+  };
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Stops the box from closing when clicking copy
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative z-30 my-12 border border-cozy-brown/30 bg-[#1e1e1e] shadow-2xl">
+      {/* HEADER BUTTON - Changed to actual <button> for better event handling */}
+      <button 
+        type="button"
+        onClick={toggleOpen}
+        className="w-full flex justify-between items-center px-6 py-4 bg-cozy-dark border-b border-cozy-brown/30 hover:bg-white/5 transition-colors text-left"
+      >
+        <div className="flex items-center gap-4">
+          <span className="text-[9px] font-mono text-cozy-red font-black px-2 py-0.5 border border-cozy-red/30 uppercase pointer-events-none">
+            {lang || 'SOURCE'}
+          </span>
+          <span className="text-xs font-bold uppercase tracking-widest text-cozy-paper/80 pointer-events-none">
+            {title || 'Implementation_Log'}
+          </span>
+        </div>
+        
+        <div className="flex items-center gap-6">
+          {isOpen && (
+            <span 
+              onClick={handleCopy}
+              className="text-[9px] font-black uppercase text-cozy-paper/40 hover:text-cozy-red transition-colors cursor-pointer"
+            >
+              {copied ? 'Copied!' : 'Copy_Raw'}
+            </span>
+          )}
+          <span className="text-cozy-paper/20 text-lg font-light pointer-events-none">
+            {isOpen ? '−' : '+'}
+          </span>
+        </div>
+      </button>
+
+      {/* CODE CONTENT */}
+      {isOpen && (
+        <div className="text-sm font-mono overflow-x-auto no-scrollbar bg-[#0c0c0c]">
+          <SyntaxHighlighter
+            language={lang?.toLowerCase() || 'csharp'}
+            style={vscDarkPlus}
+            customStyle={{
+              margin: 0,
+              padding: '2rem',
+              background: 'transparent', // Use the div's background
+              fontSize: '13px',
+              lineHeight: '1.7',
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
+      )}
     </div>
   );
 }
