@@ -2,8 +2,24 @@ import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
 import { projects } from "../projects";
 import Header from "./header";
+// Use the ESM version of the Async highlighter
 import { PrismAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
-import vscDarkPlus from 'react-syntax-highlighter/dist/cjs/styles/prism/vsc-dark-plus';
+
+// MANUAL STYLE OBJECT (Bypasses the "exports is not defined" error)
+const vscDarkPlusCustom: { [key: string]: React.CSSProperties } = {
+  'pre[class*="language-"]': { color: '#d4d4d4', background: 'none', fontFamily: 'inherit' },
+  'code[class*="language-"]': { color: '#d4d4d4', background: 'none', fontFamily: 'inherit' },
+  'comment': { color: '#6a9955' },
+  'keyword': { color: '#569cd6' },
+  'string': { color: '#ce9178' },
+  'number': { color: '#b5cea8' },
+  'function': { color: '#dcdcaa' },
+  'operator': { color: '#d4d4d4' },
+  'class-name': { color: '#4ec9b0' },
+  'punctuation': { color: '#d4d4d4' },
+  'boolean': { color: '#569cd6' },
+  'constant': { color: '#4fc1ff' },
+};
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -14,25 +30,39 @@ export default function ProjectDetail() {
   let ie = 0;
   let iee = 0;
   const getVideoPlayer = (url: string, isAutoplay: boolean = false, poster?: string) => {
-  const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
+    const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
 
-  if (isYouTube) {
-    const videoId = url.includes("v=") 
-      ? url.split("v=")[1]?.split("&")[0] 
-      : url.split("/").pop()?.split("?")[0];
-    
-    const params = isAutoplay 
-      ? `?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1` 
-      : `?rel=0&modestbranding=1`;
-    
+    if (isYouTube) {
+      const videoId = url.includes("v=") 
+        ? url.split("v=")[1]?.split("&")[0] 
+        : url.split("/").pop()?.split("?")[0];
+      
+      const params = isAutoplay 
+        ? `?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1` 
+        : `?rel=0&modestbranding=1`;
+      
+      return (
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}${params}`}
+          className="w-full h-full border-none"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      );
+    }
+    else{ 
     return (
-      <iframe
-        src={`https://www.youtube.com/embed/${videoId}${params}`}
-        className="w-full h-full border-none"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-      />
-    );
+      <video 
+        controls={!isAutoplay} 
+        autoPlay={isAutoplay} 
+        loop={isAutoplay} 
+        muted={isAutoplay} 
+        playsInline 
+        poster={poster}
+        className="w-full h-full object-contain"
+      >
+        <source src={url} type="video/mp4" />
+      </video>);
   }}
   
   useEffect(() => { setIsMounted(true); }, []);
@@ -181,7 +211,6 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  // This ensures the highlighter only loads once the page is in the browser
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -213,35 +242,30 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
 
       {isOpen && (
         <div className="text-sm font-mono overflow-x-auto no-scrollbar bg-[#0c0c0c]">
-          {/* Only render the highlighter if we are on the client side */}
           {isClient ? (
-            <SyntaxHighlighter
-              language={lang?.toLowerCase() || 'csharp'}
-              style={vscDarkPlus}
-              customStyle={{
-                margin: 0,
-                padding: '2rem',
-                background: 'transparent',
-                fontSize: '13px',
-                lineHeight: '1.7',
-              }}
-            >
-              {code}
-            </SyntaxHighlighter>
-          ) : (
-            /* Fallback while loading */
-            <pre className="p-8 text-cozy-paper/40 italic">Initializing_Source_Viewer...</pre>
-          )}
-          
-          {isClient && (
-             <div className="px-6 pb-4 flex justify-end">
-               <button 
+            <div className="relative">
+              <SyntaxHighlighter
+                language={lang?.toLowerCase() || 'csharp'}
+                style={vscDarkPlusCustom}
+                customStyle={{
+                  margin: 0,
+                  padding: '2rem',
+                  background: 'transparent',
+                  fontSize: '13px',
+                  lineHeight: '1.7',
+                }}
+              >
+                {code}
+              </SyntaxHighlighter>
+              <button 
                 onClick={handleCopy}
-                className="text-[9px] font-black uppercase text-cozy-paper/20 hover:text-cozy-red transition-colors"
-               >
-                {copied ? 'Copied!' : 'Copy_Raw_Data'}
-               </button>
-             </div>
+                className="absolute top-4 right-4 text-[9px] font-black uppercase text-cozy-paper/20 hover:text-cozy-red transition-colors bg-[#0c0c0c] px-2 py-1 border border-white/5"
+              >
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+          ) : (
+            <pre className="p-8 text-cozy-paper/40 italic">Initializing_Source_Viewer...</pre>
           )}
         </div>
       )}

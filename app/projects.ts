@@ -40,7 +40,7 @@ export const projects: Project[] = [
     thumbnail: "/images/LittleWoodyThumbnail.jpg",
     art: "/images/LittleWoodyArt.png",
     storeType: "steam",
-    storeUrl: "https://store.steampowered.com/app/123456/Little_Woody/",
+    storeUrl: "https://store.steampowered.com/app/3506470/Little_Woody/",
     backdrop: "/images/LittleWoodyArt.png",
     images: ["/images/LittleWoody-1.jpg", "/images/LittleWoody-2.jpg", "/images/LittleWoody-3.jpg", "/images/LittleWoody-4.jpg", "/images/LittleWoody-5.png", "/images/LittleWoody-6.png", "/images/LittleWoody-7.jpg"],
     documents: [ 
