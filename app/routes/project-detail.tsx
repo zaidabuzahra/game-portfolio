@@ -9,6 +9,8 @@ export default function ProjectDetail() {
   const [activeDocIndex, setActiveDocIndex] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
+  let ie = 0;
+
   useEffect(() => { setIsMounted(true); }, []);
 
   if (!project) return <div className="p-40 text-center font-sans">Project not found.</div>;
@@ -53,7 +55,7 @@ export default function ProjectDetail() {
         </header>
 
         {/* 2. VISUAL SUMMARY (Video) */}
-        <section className="mb-32">
+        <section className="mb-10">
           <div className="bg-black shadow-2xl rounded-sm overflow-hidden border border-white/5">
             <video controls poster={project.thumbnail} className="w-full h-auto max-h-[75vh] object-contain">
               <source src={project.media} type="video/mp4" />
@@ -62,29 +64,32 @@ export default function ProjectDetail() {
         </section>
 
         {/* 3. NARRATIVE FLOW (Text & Images) */}
-        <article className="max-w-3xl mx-auto">
-          <div className="space-y-16">
+        <article className="max-w-4xl mx-auto">
+          <div className="space-y-8">
             
             {/* Split the long description into paragraphs and intersperse images */}
             {project.longDescription.split('\n\n').map((paragraph, i) => (
-              <div key={i} className="space-y-16">
-                <p className="text-xl md:text-2xl leading-relaxed text-cozy-paper/80 font-light">
-                  {paragraph}
+              <div key={i} className="flex flex-col gap-6">
+                <p className="md:text-base leading-relaxed text-cozy-paper/80 font-light">
+                  {paragraph.startsWith('!') ? paragraph.substring(1) : paragraph}
                 </p>
                 
                 {/* One high-quality image from gallery per paragraph block */}
-                {project.progressGallery?.[i] && (
-                  <figure className="py-8">
+                {!paragraph.startsWith('!') && project.progressGallery?.[ie] && (
+                  <figure className="py-5">
                     <div className="bg-cozy-dark border border-cozy-brown/30 shadow-sm">
                       <img 
-                        src={project.progressGallery[i].url} 
-                        alt={project.progressGallery[i].caption} 
+                        src={project.progressGallery[ie].url} 
+                        alt={project.progressGallery[ie].caption} 
                         className="w-full h-auto" 
                       />
                     </div>
                     <figcaption className="mt-4 text-[11px] uppercase tracking-widest text-cozy-paper/40 italic">
-                      {project.progressGallery[i].caption}
+                      {project.progressGallery[ie].caption}
                     </figcaption>
+                    <div className="hidden">
+                      {ie++}
+                    </div>
                   </figure>
                 )}
               </div>
@@ -94,7 +99,7 @@ export default function ProjectDetail() {
 
         {/* 4. DOCUMENTATION ARCHIVE */}
         {project.documents && project.documents.length > 0 && (
-          <section id="gdd" className="mt-40 pt-24 border-t border-cozy-brown/30">
+          <section id="gdd" className="mt-10 pt-24 border-t border-cozy-brown/30">
             <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 gap-6">
               <h3 className="text-4xl font-black uppercase tracking-tight">Documentation</h3>
               <div className="flex flex-wrap gap-4">

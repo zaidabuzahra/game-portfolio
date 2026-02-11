@@ -148,7 +148,7 @@ function DemoCard({ project }: { project: Project }) {
 
         {/* 3. Highlights with Checkmarks */}
         <div className="space-y-3 mt-auto">
-          <p className="text-[10px] font-black uppercase text-cozy-paper/30 tracking-widest">My Contribution:</p>
+          <p className="text-[10px] font-black uppercase text-cozy-paper/30 tracking-widest">Key Takeaways:</p>
           <ul className="space-y-2">
             {project.process.slice(0, 3).map((p, i) => (
               <li key={i} className="flex gap-3 items-start">
