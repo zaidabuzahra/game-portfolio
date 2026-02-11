@@ -2,7 +2,7 @@ import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
 import { projects } from "../projects";
 import Header from "./header";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { PrismAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import vscDarkPlus from 'react-syntax-highlighter/dist/cjs/styles/prism/vsc-dark-plus';
 
 export default function ProjectDetail() {
@@ -175,19 +175,19 @@ export default function ProjectDetail() {
     </div>
   );
 }
+
 function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Debugging: If this doesn't show in your console when clicking, 
-  // then something is blocking the click entirely.
-  const toggleOpen = () => {
-    console.log("Toggle clicked. Old state:", isOpen);
-    setIsOpen(!isOpen);
-  };
+  // This ensures the highlighter only loads once the page is in the browser
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleCopy = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Stops the box from closing when clicking copy
+    e.stopPropagation();
     navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -195,52 +195,54 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
 
   return (
     <div className="relative z-30 my-12 border border-cozy-brown/30 bg-[#1e1e1e] shadow-2xl">
-      {/* HEADER BUTTON - Changed to actual <button> for better event handling */}
       <button 
         type="button"
-        onClick={toggleOpen}
-        className="w-full flex justify-between items-center px-6 py-4 bg-cozy-dark border-b border-cozy-brown/30 hover:bg-white/5 transition-colors text-left"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex justify-between items-center px-6 py-4 bg-cozy-dark border-b border-cozy-brown/30 hover:bg-white/5 transition-colors"
       >
         <div className="flex items-center gap-4">
-          <span className="text-[9px] font-mono text-cozy-red font-black px-2 py-0.5 border border-cozy-red/30 uppercase pointer-events-none">
+          <span className="text-[9px] font-mono text-cozy-red font-black px-2 py-0.5 border border-cozy-red/30 uppercase">
             {lang || 'SOURCE'}
           </span>
-          <span className="text-xs font-bold uppercase tracking-widest text-cozy-paper/80 pointer-events-none">
+          <span className="text-xs font-bold uppercase tracking-widest text-cozy-paper/80">
             {title || 'Implementation_Log'}
           </span>
         </div>
-        
-        <div className="flex items-center gap-6">
-          {isOpen && (
-            <span 
-              onClick={handleCopy}
-              className="text-[9px] font-black uppercase text-cozy-paper/40 hover:text-cozy-red transition-colors cursor-pointer"
-            >
-              {copied ? 'Copied!' : 'Copy_Raw'}
-            </span>
-          )}
-          <span className="text-cozy-paper/20 text-lg font-light pointer-events-none">
-            {isOpen ? '−' : '+'}
-          </span>
-        </div>
+        <span className="text-cozy-paper/20 text-lg font-light">{isOpen ? '−' : '+'}</span>
       </button>
 
-      {/* CODE CONTENT */}
       {isOpen && (
         <div className="text-sm font-mono overflow-x-auto no-scrollbar bg-[#0c0c0c]">
-          <SyntaxHighlighter
-            language={lang?.toLowerCase() || 'csharp'}
-            style={vscDarkPlus}
-            customStyle={{
-              margin: 0,
-              padding: '2rem',
-              background: 'transparent', // Use the div's background
-              fontSize: '13px',
-              lineHeight: '1.7',
-            }}
-          >
-            {code}
-          </SyntaxHighlighter>
+          {/* Only render the highlighter if we are on the client side */}
+          {isClient ? (
+            <SyntaxHighlighter
+              language={lang?.toLowerCase() || 'csharp'}
+              style={vscDarkPlus}
+              customStyle={{
+                margin: 0,
+                padding: '2rem',
+                background: 'transparent',
+                fontSize: '13px',
+                lineHeight: '1.7',
+              }}
+            >
+              {code}
+            </SyntaxHighlighter>
+          ) : (
+            /* Fallback while loading */
+            <pre className="p-8 text-cozy-paper/40 italic">Initializing_Source_Viewer...</pre>
+          )}
+          
+          {isClient && (
+             <div className="px-6 pb-4 flex justify-end">
+               <button 
+                onClick={handleCopy}
+                className="text-[9px] font-black uppercase text-cozy-paper/20 hover:text-cozy-red transition-colors"
+               >
+                {copied ? 'Copied!' : 'Copy_Raw_Data'}
+               </button>
+             </div>
+          )}
         </div>
       )}
     </div>
