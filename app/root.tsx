@@ -1,5 +1,5 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
-import type { LinksFunction } from "react-router"; // Added for type safety
+import type { LinksFunction } from "react-router";
 import "./app.css";
 
 export const links: LinksFunction = () => [
@@ -22,7 +22,8 @@ export default function App() {
       </head>
       <body className="antialiased">
         <Outlet />
-        <ScrollRestoration />
+        {/* React Router uses this to manage scroll automatically */}
+        <ScrollRestoration /> 
         <Scripts />
       </body>
     </html>

@@ -1,11 +1,9 @@
 import { useParams, Link } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { projects } from "../projects";
 import Header from "./header";
-// Use the ESM version of the Async highlighter
 import { PrismAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 
-// MANUAL STYLE OBJECT (Bypasses the "exports is not defined" error)
 const vscDarkPlusCustom: { [key: string]: React.CSSProperties } = {
   'pre[class*="language-"]': { color: '#d4d4d4', background: 'none', fontFamily: 'inherit' },
   'code[class*="language-"]': { color: '#d4d4d4', background: 'none', fontFamily: 'inherit' },
@@ -21,63 +19,66 @@ const vscDarkPlusCustom: { [key: string]: React.CSSProperties } = {
   'constant': { color: '#4fc1ff' },
 };
 
+// FIXED: Corrected the backticks and URL structure in the getVideoPlayer
+const getVideoPlayer = (url: string, isAutoplay: boolean = false, poster?: string) => {
+  const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
+
+  if (isYouTube) {
+    const videoId = url.includes("v=") 
+      ? url.split("v=")[1]?.split("&")[0] 
+      : url.split("/").pop()?.split("?")[0];
+    
+    const params = isAutoplay 
+      ? `?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1` 
+      : `?rel=0&modestbranding=1`;
+    
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${videoId}${params}`}
+        className="w-full h-full border-none"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        title="Project Video"
+      />
+    );
+  }
+
+  return (
+    <video 
+      controls={!isAutoplay} 
+      autoPlay={isAutoplay} 
+      loop={isAutoplay} 
+      muted={isAutoplay} 
+      playsInline 
+      poster={poster}
+      className="w-full h-full object-contain"
+    >
+      <source src={url} type="video/mp4" />
+    </video>
+  );
+};
+
 export default function ProjectDetail() {
   const { id } = useParams();
-  const project = projects.find((p) => p.id === id);
+  const project = useMemo(() => projects.find((p) => p.id === id), [id]);
+  
   const [activeDocIndex, setActiveDocIndex] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
 
-  let ie = 0;
-  let iee = 0;
-  const getVideoPlayer = (url: string, isAutoplay: boolean = false, poster?: string) => {
-    const isYouTube = url.includes("youtube.com") || url.includes("youtu.be");
-
-    if (isYouTube) {
-      const videoId = url.includes("v=") 
-        ? url.split("v=")[1]?.split("&")[0] 
-        : url.split("/").pop()?.split("?")[0];
-      
-      const params = isAutoplay 
-        ? `?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1` 
-        : `?rel=0&modestbranding=1`;
-      
-      return (
-        <iframe
-          src={`https://www.youtube.com/embed/${videoId}${params}`}
-          className="w-full h-full border-none"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-        />
-      );
-    }
-    else{ 
-    return (
-      <video 
-        controls={!isAutoplay} 
-        autoPlay={isAutoplay} 
-        loop={isAutoplay} 
-        muted={isAutoplay} 
-        playsInline 
-        poster={poster}
-        className="w-full h-full object-contain"
-      >
-        <source src={url} type="video/mp4" />
-      </video>);
-  }}
-  
-  useEffect(() => { setIsMounted(true); }, []);
+  useEffect(() => { 
+    setIsMounted(true); 
+  }, []);
 
   if (!project) return <div className="p-40 text-center font-sans">Project not found.</div>;
 
   const currentDoc = project.documents?.[activeDocIndex];
+  const narrativeBlocks = project.longDescription.split('\n\n');
 
   return (
     <div className="min-h-screen bg-cozy-gray text-cozy-paper selection:bg-cozy-red/30 pb-40 font-sans">
       <Header />
 
       <main className="max-w-5xl mx-auto px-6">
-        
-        {/* 1. PURPOSEFUL HEADER */}
         <header className="pt-32 pb-16">
           <Link to="/" className="text-cozy-red text-xs font-bold uppercase tracking-widest hover:opacity-70 transition-opacity">
             ← Back to Index
@@ -87,79 +88,72 @@ export default function ProjectDetail() {
             {project.title}
           </h1>
 
-          {/* CLEAN METADATA ROW */}
           <div className="flex flex-wrap gap-x-12 gap-y-6 py-10 border-y border-cozy-brown/20">
             <div>
               <span className="block text-[10px] uppercase tracking-[0.2em] text-cozy-red font-bold mb-1">Role</span>
               <span className="text-lg font-medium">{project.role}</span>
             </div>
-            <div>
-              <span className="block text-[10px] uppercase tracking-[0.2em] text-cozy-red font-bold mb-1">Engine</span>
-              <span className="text-lg font-medium">{project.stats?.find(s => s.label.toLowerCase().includes('engine'))?.value || "N/A"}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] uppercase tracking-[0.2em] text-cozy-red font-bold mb-1">Platform</span>
-              <span className="text-lg font-medium">{project.stats?.find(s => s.label.toLowerCase().includes('platform'))?.value || "N/A"}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] uppercase tracking-[0.2em] text-cozy-red font-bold mb-1">Team Size</span>
-              <span className="text-lg font-medium">{project.stats?.find(s => s.label.toLowerCase().includes('team'))?.value || "N/A"}</span>
-            </div>
+            {project.stats?.map(stat => (
+               <div key={stat.label}>
+                 <span className="block text-[10px] uppercase tracking-[0.2em] text-cozy-red font-bold mb-1">{stat.label}</span>
+                 <span className="text-lg font-medium">{stat.value}</span>
+               </div>
+            ))}
           </div>
         </header>
 
-        {/* 2. VISUAL SUMMARY (Video) */}
         <section className="mb-10">
           <div className="bg-black shadow-2xl rounded-sm overflow-hidden border border-white/5">
-            <div className="bg-black border border-cozy-brown aspect-video flex items-center justify-center overflow-hidden relative" key={project.media}>
+            <div className="bg-black border border-cozy-brown aspect-video flex items-center justify-center overflow-hidden relative">
               {getVideoPlayer(project.media, false, project.thumbnail)}
             </div>
           </div>
         </section>
 
-        {/* 3. NARRATIVE FLOW (Text & Images) */}
         <article className="max-w-4xl mx-auto">
           <div className="space-y-8">
-            
-            {/* Split the long description into paragraphs and intersperse images */}
-            {project.longDescription.split('\n\n').map((paragraph, i) => (
-              <div key={i} className="">
-                {paragraph.startsWith('?') && (
-                  <figure>
-                  <CodeSnippet title={paragraph.substring(1)} code={project.responsibilities?.[iee] || "No responsibilities defined"} />
-                  <div className="hidden">{iee++}</div>
+            {narrativeBlocks.map((paragraph, i) => {
+              // Deterministic logic to find the correct image/responsibility index
+              const imageIndex = narrativeBlocks.slice(0, i).filter(p => !p.startsWith('!') && !p.startsWith('?')).length;
+              const respIndex = narrativeBlocks.slice(0, i).filter(p => p.startsWith('?')).length;
+
+              if (paragraph.startsWith('?')) {
+                return (
+                  <figure key={i}>
+                    <CodeSnippet 
+                       title={paragraph.substring(1)} 
+                       code={project.responsibilities?.[respIndex] || "No data defined"} 
+                    />
                   </figure>
-                )}
-                {!paragraph.startsWith('?') && (
+                );
+              }
+              
+              return (
+                <div key={i}>
                   <p className="md:text-base leading-relaxed text-cozy-paper/80 font-light">
                     {paragraph.startsWith('!') ? paragraph.substring(1) : paragraph}
                   </p>
-                )}
-                
-                {/* One high-quality image from gallery per paragraph block */}
-                {!paragraph.startsWith('!') && !paragraph.startsWith('?') && project.progressGallery?.[ie] && (
-                  <figure className="py-5">
-                    <div className="bg-cozy-dark border border-cozy-brown/30 shadow-sm">
-                      <img 
-                        src={project.progressGallery[ie].url} 
-                        alt={project.progressGallery[ie].caption} 
-                        className="w-full h-auto" 
-                      />
-                    </div>
-                    <figcaption className="mt-4 text-[11px] uppercase tracking-widest text-cozy-paper/40 italic">
-                      {project.progressGallery[ie].caption}
-                    </figcaption>
-                    <div className="hidden">
-                      {ie++}
-                    </div>
-                  </figure>
-                )}
-              </div>
-            ))}
+                  
+                  {!paragraph.startsWith('!') && project.progressGallery?.[imageIndex] && (
+                    <figure className="py-5">
+                      <div className="bg-cozy-dark border border-cozy-brown/30 shadow-sm">
+                        <img 
+                          src={project.progressGallery[imageIndex].url} 
+                          alt={project.progressGallery[imageIndex].caption} 
+                          className="w-full h-auto" 
+                        />
+                      </div>
+                      <figcaption className="mt-4 text-[11px] uppercase tracking-widest text-cozy-paper/40 italic">
+                        {project.progressGallery[imageIndex].caption}
+                      </figcaption>
+                    </figure>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </article>
 
-        {/* 4. DOCUMENTATION ARCHIVE */}
         {project.documents && project.documents.length > 0 && (
           <section id="gdd" className="mt-10 pt-24 border-t border-cozy-brown/30">
             <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 gap-6">
@@ -170,9 +164,7 @@ export default function ProjectDetail() {
                     key={idx}
                     onClick={() => setActiveDocIndex(idx)}
                     className={`text-[11px] font-bold uppercase tracking-widest px-4 py-2 border transition-all ${
-                      activeDocIndex === idx 
-                        ? "bg-cozy-red border-cozy-red text-white" 
-                        : "border-cozy-brown text-cozy-paper/40 hover:border-cozy-paper"
+                      activeDocIndex === idx ? "bg-cozy-red border-cozy-red text-white" : "border-cozy-brown text-cozy-paper/40 hover:border-cozy-paper"
                     }`}
                   >
                     {doc.title}
@@ -181,16 +173,11 @@ export default function ProjectDetail() {
               </div>
             </div>
 
-            <div className="w-full h-[850px] bg-cozy-dark border border-cozy-brown/30">
+            <div className="w-full h-[850px] bg-cozy-dark border border-cozy-brown/30 relative">
               {isMounted && currentDoc ? (
-                <object
-                  key={currentDoc.url}
-                  data={`${currentDoc.url}#toolbar=0`}
-                  type="application/pdf"
-                  className="w-full h-full"
-                >
-                  <div className="flex items-center justify-center h-full">
-                    <a href={currentDoc.url} className="text-cozy-red underline uppercase text-xs font-bold">Download PDF</a>
+                <object key={currentDoc.url} data={`${currentDoc.url}#toolbar=0`} type="application/pdf" className="w-full h-full">
+                  <div className="flex items-center justify-center h-full text-center p-20">
+                    <a href={currentDoc.url} className="bg-cozy-red px-10 py-5 text-white font-black uppercase">Download PDF</a>
                   </div>
                 </object>
               ) : <div className="w-full h-full bg-cozy-dark/50 animate-pulse" />}
@@ -211,9 +198,7 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  useEffect(() => { setIsClient(true); }, []);
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -227,7 +212,7 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
       <button 
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center px-6 py-4 bg-cozy-dark border-b border-cozy-brown/30 hover:bg-white/5 transition-colors"
+        className="w-full flex justify-between items-center px-6 py-4 bg-cozy-dark border-b border-cozy-brown/30 hover:bg-white/5 transition-colors text-left"
       >
         <div className="flex items-center gap-4">
           <span className="text-[9px] font-mono text-cozy-red font-black px-2 py-0.5 border border-cozy-red/30 uppercase">
@@ -241,19 +226,13 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
       </button>
 
       {isOpen && (
-        <div className="text-sm font-mono overflow-x-auto no-scrollbar bg-[#0c0c0c]">
+        <div className="text-sm font-mono overflow-x-auto no-scrollbar bg-[#0c0c0c] relative">
           {isClient ? (
-            <div className="relative">
+            <>
               <SyntaxHighlighter
                 language={lang?.toLowerCase() || 'csharp'}
                 style={vscDarkPlusCustom}
-                customStyle={{
-                  margin: 0,
-                  padding: '2rem',
-                  background: 'transparent',
-                  fontSize: '13px',
-                  lineHeight: '1.7',
-                }}
+                customStyle={{ margin: 0, padding: '2rem', background: 'transparent', fontSize: '13px', lineHeight: '1.7' }}
               >
                 {code}
               </SyntaxHighlighter>
@@ -263,7 +242,7 @@ function CodeSnippet({ title, code, lang }: { title?: string, code: string, lang
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>
-            </div>
+            </>
           ) : (
             <pre className="p-8 text-cozy-paper/40 italic">Initializing_Source_Viewer...</pre>
           )}

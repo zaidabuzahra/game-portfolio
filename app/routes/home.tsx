@@ -27,20 +27,6 @@ const getVideoPlayer = (url: string, isAutoplay: boolean = false, poster?: strin
       />
     );
   }
-
-  return (
-    <video 
-      controls={!isAutoplay} 
-      autoPlay={isAutoplay} 
-      loop={isAutoplay} 
-      muted={isAutoplay} 
-      playsInline 
-      poster={poster}
-      className="w-full h-full object-contain"
-    >
-      <source src={url} type="video/mp4" />
-    </video>
-  );
 };
 
 export default function Home() {
