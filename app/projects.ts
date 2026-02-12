@@ -367,8 +367,7 @@ export const projects: Project[] = [
     title: "RTS Prototype",
     role: "Solo Developer",
     description: `A prototype for a real-time strategy game where players control a group of units to gather resources, build structures,
-     and defeat enemies. The game features a resource management system where players must balance their economy while also managing 
-     their army.`,
+     and defeat enemies. The game features a resource management system where players balance their economy while managing their army.`,
     media: "https://youtu.be/vjiGHNq4Msw?si=4ujGu36vw5ixEb-7",
     type: "video",
     thumbnail: "/images/WhereVinesWhisperLiesArt.png",

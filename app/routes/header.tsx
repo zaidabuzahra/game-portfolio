@@ -30,7 +30,7 @@ export default function Header() {
       </Link>
 
       {/* 2. SECTION NAVIGATION (Center) */}
-      <div className="hidden md:flex items-center h-full gap-1">
+      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-[50%] md:max-w-none">
         
         {/* ABOUT */}
         <button onClick={(e) => handleScroll(e, 'about')} className="text-[11px] font-black uppercase tracking-widest px-3 py-1 hover:bg-cozy-red hover:text-white transition-colors cursor-pointer h-full">
